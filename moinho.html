@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moinho Alpha 0.2</title>
+    <style>
+        #arcomaior{
+            border: 2px solid black;
+            width: 600px;
+            height: 600px;
+            margin: 20px auto auto auto;
+        }
+        #arcomedio{
+            border: 2px solid black;
+            width: 400px;
+            height: 400px;
+            margin: 100px auto auto auto;
+        }
+        #arcomenor{
+            border: 2px solid black;
+            width: 200px;
+            height: 200px;
+            margin: 100px auto auto auto;
+        }
+        #linha1{
+            border-right: 2px solid black;
+            position: absolute;
+            height: 205px;
+            top: 20px;
+            left: 685px;
+        }
+        #linha2{
+            border: 1px solid black;
+            position: absolute;
+            width: 200px;
+            top: 325px;
+            left: 785px;  
+        }
+        #linha3{
+            border-right: 2px solid black;
+            position: absolute;
+            height: 197px;
+            top: 426px;
+            left: 685px;
+        }
+        #linha4{
+            border: 1px solid black;
+            position: absolute;
+            width: 198px;
+            top: 325px;
+            left: 385px;   
+        }
+        #redlabel{
+            position: absolute;
+            top:50px;
+            left:100px;
+            color: red;
+        }
+        #bluelabel{
+            position: absolute;
+            top: 50px;
+            left: 1150px;
+            color: blue;
+        }
+        #red1, #red2, #red3, #red4, #red5, #red6, #red7, #red8, #red9{
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            z-index: 2;
+            margin: 5px;
+            display: inline-block;
+        }
+        #redconteiner{
+            position: absolute;
+            top: 80px;
+            left: 20px;
+        }
+        #blue1, #blue2, #blue3, #blue4, #blue5, #blue6, #blue7, #blue8, #blue9{
+            width: 20px;
+            height: 20px;
+            background-color: blue;
+            margin: 5px;
+            display: inline-block;
+            z-index: 2;
+        }
+        #blueconteiner{
+            position: absolute;
+            top: 80px;
+            left: 1050px;
+        }
+        #reddead{
+            position: absolute;
+            top: 170px;
+            left: 90px;
+            color: red;
+        }
+        #bluedead{
+            position:absolute;
+            top: 170px;
+            left: 1135px;
+            color: blue;
+        }
+        #colisao{
+            position: absolute;
+            top: 313px;
+            left: 567px;
+            width: 30px;
+            height: 30px;
+        }
+        #redblock{
+            position:absolute;
+            z-index: 3;
+            width: 300px;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0);
+            top: 70px;
+            left: 10px;
+            display: none;
+        }
+        #blueblock{
+            position:absolute;
+            z-index: 3;
+            width: 300px;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0);
+            top: 70px;
+            left: 1050px;
+            display: none;
+        }
+        #iniciante{
+            position: absolute;
+            width: 150px;
+            text-align: center;
+            font: Arial;
+            font-size: 15pt;
+            top: 310px;
+            left: 607px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="arcomaior">
+        <div id="arcomedio">
+            <div id="arcomenor">
+            </div>
+        </div>
+    </div>
+    <div id="linha1"></div>
+    <div id="linha2"></div>
+    <div id="linha3"></div>
+    <div id="linha4"></div>
+    <div id="redlabel"> Vermelhos</div>
+    <div id="redconteiner">
+        <div class="red" id="red1"></div><div class="red" id="red2"></div><div class="red" id="red3"></div><div class="red" id="red4"></div><div class="red" id="red5"></div><div class="red" id="red6"></div><div class="red" id="red7"></div><div class="red" id="red8"></div><div class="red" id="red9"></div>
+    </div>
+    <div id="bluelabel">Azuis</div>
+    <div id="blueconteiner">
+        <div class="blue" id="blue1"></div><div class="blue" id="blue2"></div><div class="blue" id="blue3"></div><div class="blue" id="blue4"></div><div class="blue" id="blue5"></div><div class="blue" id="blue6"></div><div class="blue" id="blue7"></div><div class="blue" id="blue8"></div><div class="blue" id="blue9"></div>  
+    </div>
+    <div id="reddead"> Vermelhos mortos</div>
+    <div id="bluedead">Azuis mortos</div>
+    <div id="colisao"></div>
+    <div id="redblock"></div>
+    <div id="blueblock"></div>
+    <div id="iniciante"></div>
+</body>
+<script>
+    var blueblock = document.querySelector("div#blueblock")
+    var redblock = document.querySelector("div#redblock")
+    var iniciante = document.getElementById('iniciante')
+    var vposX;
+    var posY;
+    var tes;
+    var inter;
+    var px;
+    var py;
+    var places = []
+    var jogadablue = []
+    var jogadared = []
+    var red = []
+    var blue = []
+    var blueplayed;
+    var redplayed = true
+    var deadblueleft = 1050
+    var deadredleft = 20
+    var identlinha;
+    var identlinha;
+    var contadora = 8
+    var contadorablue = 0
+    var vermelho = true
+    var azul = false
+    var usado = []
+    var posicaoredjogada = []
+    var posicaobluejogada = []
+    var numclassremov;
+    var numidblueremov;
+    var marcou = []
+    var verificado = false
+    var pecaremovida = false
+    var idclick;
+    var classclicked;
+    var posclicked;
+    var dirpxdir;
+    var dirpxesq;
+    var dirpybaixo;
+    var dirpycima;
+    var movase;
+    var anima;
+    var vel = 4
+    var maxpxdir
+    var maxpxesq
+    var maxpybaixo;
+    var maxpycima
+    var posjogalt = []
+    var arrayalt = []
+    var movebaixo;
+    var movecima;
+    var movedir;
+    var moveesq;
+    var atualplayer;
+    var blockfunction = true
+    var bluemortos = 0
+    var redmortos = 0
+    document.querySelector('body').addEventListener('mousemove', pxepy)
+    function pxepy(){
+        vposX = event.clientX
+        posY = event.clientY;
+        px = vposX-10
+        py = posY-10
+    }
+    events()
+    function events(){ // adiciona o evento de duplo clique
+        if (vermelho){  
+            if (contadora >= 0){ 
+                document.getElementsByClassName("red")[contadora].addEventListener("dblclick", dbclick)
+                jogadared.push(contadora)
+            }
+        }else if (azul){
+            if(contadorablue <= 8){
+                document.getElementsByClassName("blue")[contadorablue].addEventListener("dblclick", dbclick) 
+                jogadablue.push(contadorablue)
+            }
+        }
+        if (contadorablue > 8){
+            document.querySelector("body").removeEventListener("mousemove", pxepy)
+            events2()
+        }
+    }
+
+    function events2(){
+        if (redplayed && redmortos < 6){
+            for (c = 0; c < posicaoredjogada.length; c++){
+                if(posicaoredjogada[c] != null){
+                    document.getElementsByClassName("red")[posicaoredjogada[c]].addEventListener("click", mover)
+                }
+            }
+        }else if (blueplayed && bluemortos < 6){
+            for (c = 0; c < posicaobluejogada.length; c++){
+                if (posicaobluejogada[c] != null){
+                    document.getElementsByClassName("blue")[posicaobluejogada[c]].addEventListener("click", mover)
+                }
+            }
+        }
+    } 
+
+    function mover(){
+        if (!blockfunction){
+            blockfunction = true
+        }else{
+            for (c = 0; c <= 9; c++){
+                if (this.id == "red" + c){
+                    classclicked = c - 1 
+                    idclick = this.id
+                }else if (this.id == "blue" + c){
+                    classclicked = c - 1
+                    idclick = this.id
+                }
+            }
+            if (redplayed){
+                for (c = 0; c < posicaoredjogada.length; c++){
+                    if (classclicked == posicaoredjogada[c]){
+                       posclicked = c + 1 // posição do elemento clicado
+                    }
+                }
+            }else if (blueplayed){
+                for (c = 0; c < posicaobluejogada.length; c++){
+                    if (classclicked == posicaobluejogada[c]){
+                        posclicked = c + 1
+                    }
+                }
+            }
+            direcoespossiveis()
+        }    
+    }
+    function direcoespossiveis(){
+        movase = false
+        movebaixo = false
+        movecima = false
+        movedir = false
+        moveesq = false
+        px = 0
+        py = 0
+        maxpxdir = 0
+        maxpybaixo = 0
+        maxpycima = 0
+        maxpxesq = 0
+        switch (posclicked){
+            case 1:// pos 1
+                px = 370
+                py = 15
+                maxpxdir = 670
+                maxpybaixo = 310
+                if (places[7] != 8){// movep/baixo
+                    movase = true
+                    dirpybaixo = 1
+                    movebaixo = true
+                }
+                if (places[1] != 2){// movep/direita
+                    movase = true
+                    movedir = true
+                    dirpxdir = 1
+                }
+            break
+            case 2:// pos 2
+                py = 8
+                px = 670
+                maxpybaixo = 110
+                maxpxdir = 965
+                maxpxesq = 370
+                if (places[9] != 10){
+                    movase = true
+                    movebaixo = true
+                    dirpybaixo = 1//move baixo
+                }
+                if (places[0] != 1){
+                    movase = true
+                    moveesq = true
+                    dirpxesq = -1//move esquerda
+                }
+                if (places[2] != 3){
+                    movase = true
+                    movedir = true
+                    dirpxdir = 1 // move direita
+                }
+            break
+            case 3:// pos 3
+                py = 8
+                px = 967
+                maxpybaixo = 310
+                maxpxesq = 670
+                if (places[3] != 4){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                    dirpycima = 0
+                }
+                if (places[1] != 2){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break
+            case 4:// pos 4
+                py = 310
+                px = 967
+                maxpybaixo = 610
+                maxpycima = 8
+                maxpxesq = 867
+                if(places[2] != 3){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }
+                if (places[4] != 5){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+                if (places[11] != 12){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }  
+            break  
+            case 5:// pos 5
+                py = 610
+                px = 967
+                maxpybaixo = 0
+                maxpycima = 310
+                maxpxdir = 0
+                maxpxesq = 670
+                if (places[3] != 4){
+                    movase = true// move cima
+                    dirpycima = -1
+                    movecima = true
+                }
+                if (places[5] != 6){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break
+            case 6: // pos 6
+                py = 610
+                px = 670
+                maxpybaixo = 0
+                maxpycima = 505
+                maxpxdir = 965
+                maxpxesq = 370
+                if (places[13] != 14){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }
+                if (places[6] != 7){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+                if (places[4] != 5){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+            break
+            case 7:// pos 7
+                py = 610
+                px = 370
+                maxpybaixo = 0
+                maxpycima = 310
+                maxpxdir = 670
+                maxpxesq = 0
+                if (places[7] != 8){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }
+                if (places[5] != 6){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+            break
+            case 8:// 8
+                py = 310
+                px = 370
+                maxpybaixo = 610
+                maxpycima = 10
+                maxpxdir = 470
+                if (places[0] != 1){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }
+                if (places[15] != 16){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+                if (places[6] != 7){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+            break
+            case 9: // 9
+                py = 110
+                px = 470
+                maxpybaixo = 313
+                maxpxdir = 673
+                if (places[9] != 10){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+                if (places[15] != 16){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+            break
+            case 10: // pos 10
+                py = 110
+                px = 673
+                maxpycima = 8
+                maxpybaixo = 210
+                maxpxdir = 867
+                maxpxesq = 470
+                if (places[1] != 2){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }
+                if (places[10] != 11){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+                if(places[17] != 18){
+                    movase = true // move cima
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+                if (places[8] != 9){
+                    movase  = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break
+            case 11: // pos 11
+                py = 110
+                px = 867
+                maxpxesq = 673
+                maxpybaixo = 313
+                if (places[9] != 10){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+                if (places[11] != 12){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+            break
+            case 12: // pos 12
+                py = 313
+                px = 867
+                maxpycima = 110
+                maxpybaixo = 505
+                maxpxdir = 965
+                maxpxesq = 770
+                if (places[10] != 11){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }    
+                if (places[3] != 4){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+                if (places[12] != 13){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+                if (places[19] != 20){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break
+            case 13: // pos 13
+                py = 505
+                px = 867
+                maxpycima = 313
+                maxpxesq = 673
+                if (places[11] != 12){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }
+                if(places[13] != 14){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break
+            case 14: // pos 14
+                py = 507
+                px = 673
+                maxpycima = 413
+                maxpybaixo = 610
+                maxpxdir = 867
+                maxpxesq = 470
+                if (places[21] != 22){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }
+                if (places[12] != 13){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }    
+                if (places[5] != 6){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+                if (places[14] != 15){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break
+            case 15: // pos 15    
+                py = 507
+                px = 470
+                maxpycima = 313
+                maxpxdir = 673
+                if (places[13] != 14){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+                if (places[15] != 16){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }
+            break
+            case 16: // pos 16
+                py = 313
+                px = 467
+                maxpycima = 110
+                maxpybaixo = 507
+                maxpxdir = 567
+                maxpxesq = 370
+                if (places[8] != 9){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }    
+                if (places[23] != 24){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+                if (places[14] != 15){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+                if (places[7] != 8){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break
+            case 17: // pos 17
+                py = 213
+                px = 570
+                maxpxdir = 670
+                maxpybaixo = 313
+                if (places[17] != 18){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }    
+                if (places[23] != 24){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+            break
+            case 18: // pos 18
+                py = 210
+                px = 670
+                maxpycima = 110
+                maxpxdir = 770
+                maxpxesq = 570
+                if (places[9] != 10){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }    
+                if (places[18] != 19){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+                if (places[16] != 17){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break
+            case 19: // pos 19
+                py = 210
+                px = 770
+                maxpybaixo = 310
+                maxpxesq = 670
+                if (places[19] != 20){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                } 
+                if (places[17] != 18){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break
+            case 20: // pos 20
+                py = 310
+                px = 770
+                maxpycima = 210
+                maxpxdir = 867
+                maxpybaixo = 410
+                if (places[18] != 19){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }       
+                if (places[11] != 12){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+                if (places[20] != 21){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+            break    
+            case 21: // pos 21
+                py = 410
+                px = 770
+                maxpycima = 310
+                maxpxesq = 670
+                if (places[19] != 20){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }
+                if (places[21] != 22){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break
+            case 22: // pos 22
+                py = 413
+                px = 670
+                maxpxdir = 770
+                maxpybaixo = 507
+                maxpxesq = 570
+                if (places[20] != 21){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+                if (places[13] != 14){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+                if (places[22] != 23){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break
+            case 23: // pos 23
+                py = 413
+                px = 570
+                maxpycima = 313
+                maxpxdir = 670
+                if (places[23] != 24){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }    
+                if (places[21] != 22){
+                    movase = true // move direita
+                    movedir = true
+                    dirpxdir = 1
+                }
+            break
+            case 24: // pos 24
+                py = 313
+                px = 567 
+                maxpycima = 213
+                maxpybaixo = 413
+                maxpxesq = 467
+                if (places[16] != 17){
+                    movase = true // move cima
+                    movecima = true
+                    dirpycima = -1
+                }   
+                if (places[22] != 23){
+                    movase = true // move baixo
+                    movebaixo = true
+                    dirpybaixo = 1
+                }
+                if (places[15] != 16){
+                    movase = true // move esquerda
+                    moveesq = true
+                    dirpxesq = -1
+                }
+            break    
+
+        }
+        console.log(movedir + "direita")
+        console.log(moveesq + "esquerda")
+        console.log(movecima + "cima")
+        console.log(movebaixo + 'baixo')
+        if (movase){
+            document.addEventListener('keydown', moverpara)
+        }
+    }
+    function moverpara(){
+        if (idclick.match("red") != null){
+            atualplayer = "vermelho"
+            arrayalt = red
+            posjogalt = posicaoredjogada
+        }else if (idclick.match("blue") != null){
+            atualplayer = "azul"
+            arrayalt = blue
+            posjogalt = posicaobluejogada
+        }
+        if (event.keyCode == 39 && movedir){
+            places[posclicked - 1] = 0
+            arrayalt[posclicked - 1] = 0
+            posjogalt[posclicked - 1] = null
+            mudarposdir()
+            removerlinha(arrayalt)
+            document.removeEventListener("keydown", moverpara)
+            moverp_dir()
+        }else if (event.keyCode == 37 && moveesq){
+            places[posclicked - 1] = 0
+            arrayalt[posclicked - 1] = 0
+            posjogalt[posclicked - 1] = null
+            mudarposesq()
+            removerlinha(arrayalt)
+            document.removeEventListener("keydown", moverpara)
+            moverp_esq()    
+        }else if (event.keyCode == 40 && movebaixo){
+            places[posclicked - 1] = 0
+            arrayalt[posclicked - 1] = 0
+            posjogalt[posclicked - 1] = null
+            mudarposbaixo()
+            removerlinha(arrayalt)
+            document.removeEventListener("keydown", moverpara)
+            moverp_baixo()
+        }else if (event.keyCode == 38 && movecima){
+            places[posclicked - 1] = 0
+            arrayalt[posclicked - 1] = 0
+            posjogalt[posclicked - 1] = null
+            mudarposcima()
+            removerlinha(arrayalt)
+            document.removeEventListener("keydown", moverpara) 
+            moverp_cima()
+        }
+    }
+    function mudarposcima(){
+        switch(posclicked){
+        case 4: // pos 4
+            identlinha = 3
+            places[2] = 3
+            arrayalt[2] = 3
+            posjogalt[2] = classclicked
+        break    
+        case 5: // pos 5
+            identlinha = 4
+            places[3] = 4
+            arrayalt[3] = 4
+            posjogalt[3] = classclicked
+        break    
+        case 6: // pos 6
+            identlinha = 14
+            places[13] = 14
+            arrayalt[13] = 14
+            posjogalt[13] = classclicked
+        break    
+        case 7:// pos 7
+            identlinha = 8
+            places[7] = 8
+            arrayalt[7] = 8
+            posjogalt[7] = classclicked
+        break    
+        case 8:// pos 8
+            identlinha = 1
+            places[0] = 1
+            arrayalt[0] = 1
+            posjogalt[0] = classclicked
+        break    
+        case 10:// pos 10
+            identlinha = 2
+            places[1] = 2
+            arrayalt[1] = 2
+            posjogalt[1] = classclicked
+        break
+        case 12:// pos 12
+            identlinha = 11
+            places[10] = 11
+            arrayalt[10] = 11
+            posjogalt[10] = classclicked 
+        break
+        case 13:// pos 13
+            identlinha = 12
+            places[11] = 12
+            arrayalt[11] = 12
+            posjogalt[11] = classclicked
+        break
+        case 14:// pos 14
+            identlinha = 22
+            places[21] = 22
+            arrayalt[21] = 22
+            posjogalt[21] = classclicked
+        break
+        case 15:// pos 15
+            identlinha = 16
+            places[15] = 16
+            arrayalt[15] = 16
+            posjogalt[15] = classclicked
+        break
+        case 16: // pos 16
+            identlinha = 9
+            places[8] = 9
+            arrayalt[8] = 9
+            posjogalt[8] = classclicked
+        break
+        case 18: // pos 18
+            identlinha = 10
+            places[9] = 10
+            arrayalt[9] = 10
+            posjogalt[9] = classclicked
+        break    
+        case 20: // pos 20
+            identlinha = 19
+            places[18] = 19
+            arrayalt[18] = 19
+            posjogalt[18] = classclicked
+        break
+        case 21: // pos 21
+            identlinha = 20
+            places[19] = 20
+            arrayalt[19] = 20
+            posjogalt[19] = classclicked
+        break    
+        case 23:// pos 23
+            identlinha = 24
+            places[23] = 24
+            arrayalt[23] = 24
+            posjogalt[23] = classclicked
+        break    
+        case 24: // pos 24
+            identlinha = 17
+            places[16] = 17
+            arrayalt[16] = 17
+            posjogalt[16] = classclicked
+        break    
+        }
+    }
+    function mudarposbaixo(){
+        switch(posclicked){
+        case 1:// pos 1
+            identlinha = 8
+            places[7] = 8
+            arrayalt[7] = 8
+            posjogalt[7] = classclicked
+        break    
+        case 2:// pos 2
+            identlinha = 10
+            places[9] = 10
+            arrayalt[9] = 10
+            posjogalt[9] = classclicked
+        break    
+        case 3: // pos 3
+            identlinha = 4
+            places[3] = 4
+            arrayalt[3] = 4
+            posjogalt[3] = classclicked
+        break    
+        case 4:// pos 4
+            identlinha = 5
+            places[4] = 5
+            arrayalt[4] = 5
+            posjogalt[4] = classclicked
+        break    
+        case 8:// pos 8
+            identlinha = 7
+            places[6] = 7
+            arrayalt[6] = 7
+            posjogalt[6] = classclicked
+        break    
+        case 9:// pos 9
+            identlinha = 16
+            places[15] = 16
+            arrayalt[15] = 16
+            posjogalt[15] = classclicked
+        break    
+        case 10:// pos 10
+            identlinha = 18
+            places[17] = 18
+            arrayalt[17] = 18
+            posjogalt[17] = classclicked
+        break
+        case 11:// pos 11
+            identlinha = 12
+            places[11] = 12
+            arrayalt[11] = 12
+            posjogalt[11] = classclicked
+        break
+        case 12:// pos 12
+            identlinha = 13
+            places[12] = 13
+            arrayalt[12] = 13
+            posjogalt[12] = classclicked
+        break
+        case 14:// pos 14
+            identlinha = 6
+            places[5] = 6
+            arrayalt[5] = 6
+            posjogalt[5] = classclicked
+        break
+        case 16:// pos 16
+            identlinha = 15
+            places[14] = 15
+            arrayalt[14] = 15
+            posjogalt[14] = classclicked
+        break
+        case 17:// pos 17
+            identlinha = 24
+            places[23] = 24
+            arrayalt[23] = 24
+            posjogalt[23] = classclicked 
+        break
+        case 19:// pos 19
+            identlinha = 20
+            places[19] = 20
+            arrayalt[19] = 20
+            posjogalt[19] = classclicked
+        break
+        case 20:// pos 20
+            identlinha = 21
+            places[20] = 21
+            arrayalt[20] = 21
+            posjogalt[20] = classclicked
+        break
+        case 22:// pos 22
+            identlinha = 14
+            places[13] = 14
+            arrayalt[13] = 14
+            posjogalt[13] = classclicked
+        break
+        case 24:// pos 24
+            identlinha = 23
+            places[22] = 23
+            arrayalt[22] = 23
+            posjogalt[22] = classclicked
+        break
+        }
+    }
+    function mudarposesq(){
+        switch(posclicked){
+        case 2:// pos 2
+            identlinha = 1
+            places[0] = 1
+            arrayalt[0] = 1
+            posjogalt[0] = classclicked
+        break
+        case 3:// pos 3
+            identlinha = 2
+            places[1] = 2
+            arrayalt[1] = 2
+            posjogalt[1] = classclicked
+        break
+        case 4: // pos 4
+            identlinha = 12
+            places[11] = 12
+            arrayalt[11] = 12
+            posjogalt[11] = classclicked
+        break
+        case 5:// pos 5
+            identlinha = 6
+            places[5] = 6
+            arrayalt[5] = 6
+            posjogalt[5] = classclicked
+        break
+        case 6:// pos 6
+            identlinha = 7
+            places[6] = 7
+            arrayalt[6] = 7
+            posjogalt[6] = classclicked
+        break
+        case 10:// pos 10
+            identlinha = 9
+            places[8] = 9
+            arrayalt[8] = 9
+            posjogalt[8] = classclicked
+        break
+        case 11:// pos 11
+            identlinha = 10
+            places[9] = 10
+            arrayalt[9] = 10
+            posjogalt[9] = classclicked
+        break
+        case 12:// pos 12
+            identlinha = 20
+            places[19] = 20
+            arrayalt[19] = 20
+            posjogalt[19] = classclicked
+        break
+        case 13:// pos 13
+            identlinha = 14
+            places[13] = 14
+            arrayalt[13] = 14
+            posjogalt[13] = classclicked
+        break
+        case 14:// pos 14
+            identlinha = 15
+            places[14] = 15
+            arrayalt[14] = 15
+            posjogalt[14] = classclicked
+        break
+        case 16:// pos 16
+            identlinha = 8
+            places[7] = 8
+            arrayalt[7] = 8
+            posjogalt[7] = classclicked
+        break
+        case 18:// pos 18
+            identlinha = 17
+            places[16] = 17
+            arrayalt[16] = 17
+            posjogalt[16] = classclicked
+        break
+        case 19:// pos 19
+            identlinha = 18
+            places[17] = 18
+            arrayalt[17] = 18
+            posjogalt[17] = classclicked
+        break
+        case 21:// pos 21
+            identlinha = 22
+            places[21] = 22
+            arrayalt[21] = 22
+            posjogalt[21] = classclicked
+        break
+        case 22:// pos 22
+            identlinha = 23
+            places[22] = 23
+            arrayalt[22] = 23
+            posjogalt[22] = classclicked
+        break
+        case 24:// pos 24
+            identlinha = 16
+            places[15] = 16
+            arrayalt[15] = 16
+            posjogalt[15] = classclicked
+        break
+        }
+    }
+    function mudarposdir(){ // movimentos para direita
+        switch(posclicked){
+        case 1://pos 1
+            identlinha = 2
+            places[1] = 2
+            arrayalt[1] = 2
+            posjogalt[1] = classclicked
+        break
+        case 2://pos 2
+            identlinha = 3
+            places[2] = 3
+            arrayalt[2] = 3
+            posjogalt[2] = classclicked
+        break
+        case 6:// pos 6
+            identlinha = 5
+            places[4] = 5
+            arrayalt[4] = 5
+            posjogalt[4] = classclicked
+        break
+        case 7:// pos 7
+            identlinha = 6
+            places[5] = 6
+            arrayalt[5] = 6
+            posjogalt[5] = classclicked
+        break
+        case 8:// pos 8
+            identlinha = 16
+            places[15] = 16
+            arrayalt[15] = 16
+            posjogalt[15] = classclicked
+        break
+        case 9:// pos 9
+            identlinha = 10
+            places[9] = 10
+            arrayalt[9] = 10
+            posjogalt[9] = classclicked
+        break
+        case 10://pos 10
+            identlinha = 11
+            places[10] = 11
+            arrayalt[10] = 11
+            posjogalt[10] = classclicked
+        break
+        case 12:// pos 12
+            identlinha = 4
+            places[3] = 4
+            arrayalt[3] = 4
+            posjogalt[3] = classclicked
+        break
+        case 14:// pos 14
+            identlinha = 13
+            places[12] = 13
+            arrayalt[12] = 13
+            posjogalt[12] = classclicked
+        break
+        case 15:// pos 15
+            identlinha = 14
+            places[13] = 14
+            arrayalt[13] = 14
+            posjogalt[13] = classclicked
+        break
+        case 16:// pos 16
+            identlinha = 24
+            places[23] = 24
+            arrayalt[23] = 24
+            posjogalt[23] = classclicked
+        break
+        case 17:// pos 17
+            identlinha = 18
+            places[17] = 18
+            arrayalt[17] = 18
+            posjogalt[17] = classclicked
+        break
+        case 18:// pos 18
+            identlinha = 19
+            places[18] = 19
+            arrayalt[18] = 19
+            posjogalt[18] = classclicked
+        break
+        case 20:// pos 20
+            identlinha = 12
+            places[11] = 12
+            arrayalt[11] = 12
+            posjogalt[11] = classclicked
+        break
+        case 22:// pos 22
+            identlinha = 21
+            places[20] = 21
+            arrayalt[20] = 21
+            posjogalt[20] = classclicked
+        break
+        case 23:// pos 23
+            identlinha = 22
+            places[21] = 22
+            arrayalt[21] = 22
+            posjogalt[21] = classclicked
+        break
+        }
+    }
+    function moverp_dir(){
+        px += dirpxdir*vel
+        document.getElementById(idclick).style.left = px + "px"
+        anima = requestAnimationFrame(moverp_dir)
+        if (px >= maxpxdir){
+            cancelAnimationFrame(anima)
+            identcor()
+        }
+    }
+
+    function moverp_esq(){
+        px += dirpxesq*vel
+        document.getElementById(idclick).style.left = px + "px"
+        anima = requestAnimationFrame(moverp_esq)
+        if (px <= maxpxesq){
+            cancelAnimationFrame(anima)
+            identcor()
+        }
+    }
+    function moverp_cima(){
+        py += dirpycima*vel
+        document.getElementById(idclick).style.top = py + "px"
+        anima = requestAnimationFrame(moverp_cima)
+        if (py <= maxpycima){
+            cancelAnimationFrame(anima)
+            identcor()
+        }
+    }
+    function moverp_baixo(){
+        py += dirpybaixo*vel
+        document.getElementById(idclick).style.top = py + "px"
+        anima = requestAnimationFrame(moverp_baixo)
+        if (py >= maxpybaixo){
+            cancelAnimationFrame(anima)
+            identcor()
+        }
+    }
+    function identcor(){ // identifica a cor do elemento clicado
+        if (atualplayer == "vermelho"){
+            red = arrayalt
+            removerEventos()
+            posicaoredjogada = posjogalt
+            verificarpts(red, "vermelho")
+            atualplayer = " "
+            blueplayed = true
+            redplayed = false
+            events2()
+             
+        }else if (atualplayer == "azul"){
+            blue = arrayalt
+            removerEventos()
+            posicaobluejogada = posjogalt
+            verificarpts(blue, "azul")
+            atualplayer = " "
+            redplayed = true
+            blueplayed = false
+            events2()  
+             
+        }  
+    }
+    function removerEventos(){
+        if (atualplayer == "azul"){
+            for (c = 0; c < posicaobluejogada.length; c++){
+                if (posicaobluejogada[c] != null){
+                    document.getElementsByClassName("blue")[posicaobluejogada[c]].removeEventListener("click", mover)
+                }  
+            }
+        }else if (atualplayer == "vermelho"){    
+            for (c = 0; c < posicaoredjogada.length; c++){
+                if(posicaoredjogada[c] != null){
+                    document.getElementsByClassName("red")[posicaoredjogada[c]].removeEventListener("click", mover)   
+                } 
+            }
+        }    
+    }
+
+    function dbclick(){
+        tes = event.target
+        if (vermelho){ // Adiciona o evento de clique parar na casa clicada
+            document.getElementsByClassName("red")[contadora].addEventListener("click", parar)
+        }else if (azul){
+            document.getElementsByClassName("blue")[contadorablue].addEventListener("click", parar)
+        }
+        inter = setInterval(arrastar, 16.66)// função que move a peça
+    }
+    function arrastar(){//Move ao duplo clique
+        tes.style.position = "fixed"
+        tes.style.top = (py) + "px"
+        tes.style.left = (px) + "px"
+    }
+
+    function parar(){
+        verificado = false
+        casas()
+        if (verificado){
+            if (vermelho){
+                document.getElementsByClassName("red")[contadora].removeEventListener("click", parar)
+                vermelho = false
+                azul = true
+                redplayed = false
+                blueplayed = true
+                verificarpts(red, "vermelho")
+                contadora-- 
+                events()
+            }else if (azul){
+                document.getElementsByClassName("blue")[contadorablue].removeEventListener("click", parar)
+                azul = false
+                vermelho = true
+                blueplayed = false
+                redplayed = true
+                verificarpts(blue, "azul")
+                contadorablue++  
+                events()  
+            }
+        } 
+    }
+
+    function pontos(venc){
+        blockfunction = false
+        if (venc == "vermelho"){
+            iniciante.innerHTML = "Remova uma peça azul"
+            blueblock.style.display = "block"
+            identlinha = 0
+            for (c = 0 ; c < jogadablue.length; c++){
+                document.getElementsByClassName("blue")[jogadablue[c]].addEventListener('click', removerpecaablue)
+            }
+
+        }else if (venc == "azul"){
+            iniciante.innerHTML = "Remova uma peça vermelha"
+            redblock.style.display = "block"
+            identlinha = 0
+            for (c = 0 ; c < jogadared.length; c++){
+                document.getElementsByClassName("red")[jogadared[c]].addEventListener('click', removerpecared)
+            }
+        }
+    }
+
+    function removerpecaablue(){ // quando vermelho marca ponto
+        for (c = 0; c <= 9; c++){
+            if (this.id == "blue" + c){
+                numidblueremov = c - 1
+            }
+        }
+        for (c = 0; c < posicaobluejogada.length; c++){
+            if (numidblueremov == posicaobluejogada[c]){
+                places.splice(c, 1, 0)
+                identlinha = c + 1
+                removerlinha(blue)
+                blue.splice(c, 1, 0)
+                posicaobluejogada.splice(c, 1, null)
+            }
+        }
+        event.target.style.top = 200 + "px"
+        event.target.style.left = deadblueleft + "px"
+        deadblueleft += 30
+        for (c = 0 ; c < jogadablue.length; c++){
+            document.getElementsByClassName("blue")[jogadablue[c]].removeEventListener('click', removerpecaablue) 
+        }
+        bluemortos ++
+        blueblock.style.display = "none"
+        iniciante.innerHTML = " "
+        if (bluemortos > 6){
+            iniciante.innerHTML = "Vermelho Venceu!"
+        }
+    }
+
+    function removerpecared (){ // quando azul marca ponto
+        for (c = 0; c <= 9; c++){
+            if (this.id == "red" + c){
+                numclassremov = c - 1
+            }
+        }
+        for (c = 0; c < posicaoredjogada.length; c++){
+            if (numclassremov == posicaoredjogada[c]){
+                places.splice(c, 1, 0)
+                identlinha = c+ 1 // identifica a posiçao do elemento no array, para depois encontrar usa linha pertencente
+                removerlinha(red)
+                red.splice(c, 1, 0)
+                posicaoredjogada.splice(c, 1, null)
+            }
+        }
+        event.target.style.top = 200 + "px"
+        event.target.style.left = deadredleft + "px"
+        deadredleft += 30
+        for (c = 0 ; c < jogadared.length; c++){
+            document.getElementsByClassName("red")[jogadared[c]].removeEventListener('click', removerpecared)
+        }
+        redmortos++
+        redblock.style.display = "none" 
+        iniciante.innerHTML = " "
+        if (redmortos > 6){
+            iniciante.innerHTML = "Azul Venceu"
+        }
+    }
+
+    function removerlinha(color){ // remove a pontuaçao que informa que a linha foi ocupada
+        if (color[0] == identlinha && color[1] == 2 && color[2] == 3){
+            usado.splice(0, 1, 0)
+        }else if (color[0] == 1 && color[1] == identlinha && color[2] == 3){
+            usado.splice(0, 1, 0)
+        }else if (color[0] == 1 && color[1] == 2 && color[2] == identlinha){
+            usado.splice(0, 1, 0)
+        }else if(color[2] == identlinha && color[3] == 4 && color[4] == 5){
+            usado.splice(1, 1, 0)
+        }else if (color[2] == 3 && color[3] == identlinha && color[4] == 5){
+            usado.splice(1, 1, 0)
+        }else if (color[2] == 3 && color[3] == 4 && color[4] == identlinha){
+            usado.splice(1, 1, 0)
+            //linha 3
+        }else if (color[6] == identlinha && color[5] == 6 && color[4] == 5){
+            usado.splice(2, 1, 0)
+        }else if (color[6] == 7 && color[5] == identlinha && color[4] == 5){
+            usado.splice(2, 1, 0)
+        }else if (color[6] == 7 && color[5] == 6 && color[4] == identlinha){
+            usado.splice(2, 1, 0)
+            //linha 4
+        }else if (color[0] == identlinha && color[6] == 7 && color[7] == 8){
+            usado.splice(3, 1, 0)
+        }else if (color[0] == 1 && color[6] == identlinha && color[7] == 8){
+            usado.splice(3, 1, 0)
+        }else if (color[0] == 1 && color[6] == 7 && color[7] == identlinha){
+            usado.splice(3, 1, 0)
+            //linha 5
+        }else if (color[8] == identlinha && color[9] == 10 && color[10] == 11){
+            usado.splice(4, 1, 0)
+        }else if (color[8] == 9 && color[9] == identlinha && color[10] == 11){
+            usado.splice(4, 1, 0)
+        }else if (color[8] == 9 && color[9] == 10 && color[10] == identlinha){
+            usado.splice(4, 1, 0)
+            // linha 6
+        }else if (color[10] == identlinha && color[11] == 12 && color[12] == 13){
+            usado.splice(5, 1, 0)
+        }else if (color[10] == 11 && color[11] == identlinha && color[12] == 13){
+            usado.splice(5, 1, 0)
+        }else if (color[10] == 11 && color[11] == 12 && color[12] == identlinha){
+            usado.splice(5, 1, 0)
+            //linha 7
+        }else if (color[12] == identlinha && color[13] == 14 && color[14] == 15){
+            usado.splice(6, 1, 0)
+        }else if (color[12] == 13 && color[13] == identlinha && color[14] == 15){
+            usado.splice(6, 1, 0)
+        }else if (color[12] == 13 && color[13] == 14 && color[14] == identlinha){
+            usado.splice(6, 1, 0)
+            //linha 8
+        }else if (color[8] == identlinha && color[15] == 16 && color[14] == 15){
+            usado.splice(7, 1, 0)
+        }else if (color[8] == 9 && color[15] == identlinha && color[14] == 15){
+            usado.splice(7, 1, 0)
+        }else if (color[8] == 9 && color[15] == 16 && color[14] == identlinha){
+            usado.splice(7, 1, 0)
+            //linha 9
+        }else if (color[16] == identlinha && color[17] == 18 && color[18] == 19){
+            usado.splice(8, 1, 0)
+        }else if (color[16] == 17 && color[17] == identlinha && color[18] == 19){
+            usado.splice(8, 1, 0)
+        }else if (color[16] == 17 && color[17] == 18 && color[18] == identlinha){
+            usado.splice(8, 1, 0)
+            // linha 10
+        }else if (color[18] == identlinha && color[19] == 20 && color[20] == 21){
+            usado.splice(9, 1, 0)
+        }else if(color[18] == 19 && color[19] == identlinha && color[20] == 21){
+            usado.splice(9, 1, 0)
+        }else if (color[18] == 19 && color[19] == 20 && color[20] == identlinha){
+            usado.splice(9, 1, 0)
+            //linha 11
+        }else if(color[22] == identlinha && color[21] == 22 && color[20] == 21){
+            usado.splice(10, 1, 0)
+        }else if (color[22] == 23 && color[21] == identlinha && color[20] == 21){
+            usado.splice(10, 1, 0)
+        }else if (color[22] == 23 && color[21] == 22 && color[20] == identlinha){
+            usado.splice(10, 1, 0)
+            //linha 12
+        }else if (color[16] == identlinha && color[23] == 24 && color[22] == 23){
+            usado.splice(11, 1, 0)
+        }else if (color[16] == 17 && color[23] == identlinha && color[22] == 23){
+            usado.splice(11, 1, 0)
+        }else if (color[16] == 17 && color[23] == 24 && color[22] == identlinha){
+            usado.splice(11, 1, 0)
+            //linha 13 || vertical 1
+        }else if (color[1] == identlinha && color[9] == 10 && color[17] == 18){
+            usado.splice(12, 1, 0)
+        }else if (color[1] == 2 && color[9] == identlinha && color[17] == 18){
+            usado.splice(12, 1, 0)
+        }else if (color[1] == 2 && color[9] == 10 && color[17] == identlinha){
+            usado.splice(12, 1, 0)
+            //linha 14 || vertical 2
+        }else if(color[19] == identlinha && color[11] == 12 && color[3] == 4){
+            usado.splice(13, 1, 0)
+        }else if(color[19] == 20 && color[11] == identlinha && color[3] == 4){
+            usado.splice(13, 1, 0)
+        }else if (color[19] == 20 && color[11] == 12 && color[3] == identlinha){
+            usado.splice(13, 1, 0)
+            // linha 15 || vertical 3
+        }else if(color[21] == identlinha && color[13] == 14 && color[5] == 6){
+            usado.splice(14, 1, 0)
+        }else if (color[21] == 22 && color[13] == identlinha && color[5] == 6){
+            usado.splice(14, 1, 0)
+        }else if (color[21] == 22 && color[13] == 14 && color[5] == identlinha){
+            usado.splice(14, 1, 0)
+            //linha 16 || vertical 4
+        }else if (color[7] == identlinha && color[15] == 16 && color[23] == 24){
+            usado.splice(15, 1, 0)
+        }else if (color[7] == 8 && color[15] == identlinha && color[23] == 24){
+            usado.splice(15, 1, 0)
+        }else if (color[7] == 8 && color[15] == 16 && color[23] == identlinha){
+            usado.splice(15, 1, 0)
+        }
+    }   
+
+    function verificarpts(cor, venc){// verificar todos as chances de pontos
+        //linha 1
+        if(cor[0] == 1 && cor[1] == 2 && cor[2] == 3 && usado[0] != 1){
+            pontos(venc)
+            usado[0] = 1
+        //linha 2    
+        }else if (cor[2] == 3 && cor[3] == 4 && cor[4] == 5 && usado[1] != 2){  
+            pontos(venc)
+            usado[1] = 2
+        //linha 3    
+        }else if (cor[6] == 7 && cor[5] == 6 && cor[4] == 5 && usado[2] != 3){
+            pontos(venc)
+            usado[2] = 3
+            //linha 4
+        }else if (cor[0] == 1 && cor[6] == 7 && cor[7] == 8 && usado[3] != 4){
+            pontos(venc)
+            usado[3] = 4
+            //linha5
+        }else if (cor[8] == 9 && cor[9] == 10 && cor[10] == 11 && usado[4] != 5){
+            pontos(venc)
+            usado[4] = 5
+            //linha 6
+        }else if (cor[10] == 11 && cor[11] == 12 && cor[12] == 13 && usado[5] != 6){
+            pontos(venc)
+            usado[5] = 6
+            //linha 7
+        }else if (cor[12] == 13 && cor[13] == 14 && cor[14] == 15 && usado[6] != 7){
+            pontos(venc)
+            usado[6] = 7
+            //linha 8
+        }else if (cor[8] == 9 && cor[15] == 16 && cor[14] == 15 && usado[7] != 8){
+            pontos(venc)
+            usado[7] = 8
+            //linha 9
+        }else if (cor[16] == 17 && cor[17] == 18 && cor[18] == 19 && usado[8] != 9){
+            pontos(venc)
+            usado[8] = 9
+            //linha 10
+        }else if (cor[18] == 19 && cor[19] == 20 && cor[20] == 21 && usado[9] != 10){
+            pontos(venc)
+            usado[9] = 10
+            //linha 11
+        }else if (cor[22] == 23 && cor[21] == 22 && cor[20] == 21 && usado[10] != 11){
+            pontos(venc)
+            usado[10] = 11
+            //linha 12
+        }else if (cor[16] == 17 && cor[23] == 24 && cor[22] == 23 && usado[11] != 12){
+            pontos(venc)
+            usado[11] = 12
+            // vertical 1
+        }else if (cor[1] == 2 && cor[9] == 10 && cor[17] == 18 && usado[12] != 13){
+            pontos(venc)
+            usado[12] = 13
+            //vertical 2
+        }else if (cor[19] == 20 && cor[11] == 12 && cor[3] == 4 && usado[13] != 14){
+            pontos(venc)
+            usado[13] = 14
+            //vertical 3
+        }else if (cor[21] == 22 && cor[13] == 14 && cor[5] == 6 && usado[14] != 15){
+            pontos(venc)
+            usado[14] = 15
+            //vertical 4
+        }else if (cor[7] == 8 && cor[15] == 16 && cor[23] == 24 && usado[15] != 16){
+            pontos(venc)
+            usado[15] = 16
+        }  
+    }    
+    
+    
+    function casas(){// comentarios == as casas do tabuleiro em sentido horario partir do canto esquerdo
+        if ((py >= 5 && py < 17) && (px > 360 && px < 378) && (places[0] != 1)){ //1
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[0] = 1
+            addpositions(0)
+            verificado = true
+        }else if((py >= 4 && py < 17) && (px > 660 && px < 678) && (places[1] != 2)){//2
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[1] = 2
+            addpositions(1) 
+            verificado = true
+        }else if((py >=4 && py < 17) && (px > 955 && px < 973) && (places[2] != 3)){//3
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[2] = 3
+            addpositions(2) 
+            verificado = true
+        }else if ((py > 305 && py <317) && (px > 955 && px < 973) && (places[3] != 4)){ //4
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[3] = 4
+            addpositions(3) 
+            verificado = true
+        }else if ((py > 605 && py < 617) && (px > 955 && px < 973) && (places[4] != 5)){//5
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[4] = 5
+            addpositions(4) 
+            verificado = true
+        }else if ((py > 603 && py < 617) && (px > 660 && px < 678) && (places[5] != 6)){//6
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[5] = 6
+            addpositions(5)
+            verificado = true
+        }else if ((py > 603 && py < 617) && (px > 360 && px < 378) && (places[6] != 7)){//7
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[6] = 7
+            addpositions(6)
+            verificado = true
+        }else if ((py > 305 && py < 317) && (px > 360 && px < 378) && (places[7] != 8)){//8
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[7] = 8
+            addpositions(7)
+            verificado = true
+        }else if ((py > 105 && py < 117) && (px > 460 && px < 478) && (places[8] != 9)){//9
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[8] = 9
+            addpositions(8)
+            verificado = true 
+        }else if ((py > 105 && py < 117) && (px > 663 && px < 680) && (places[9] != 10)){//10
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[9] = 10 
+            addpositions(9)
+            verificado = true
+        }else if ((py > 105 && py < 117) && (px > 857 && px < 875) && (places[10] != 11)){//11
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[10] = 11
+            addpositions(10) 
+            verificado = true
+        }else if ((py > 308 && py < 320) && (px > 860 && px < 875) && (places[11] != 12)){//12
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[11] = 12 
+            addpositions(11)
+            verificado = true
+        }else if ((py > 496 && py < 512) && (px > 857 && px < 875) && (places[12] != 13)){//13
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[12] = 13
+            addpositions(12) 
+            verificado = true
+        }else if ((py > 496 && py < 512) && (px > 663 && px < 680) && (places[13] != 14)){//14
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[13] = 14
+            addpositions(13)
+            verificado = true
+        }else if ((py > 496 && py < 512) && (px > 460 && px < 478) && (places[14] != 15)){//15
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[14] = 15
+            addpositions(14)
+            verificado = true 
+        }else if ((py > 308 && py < 320) && (px > 457 && px < 475) && (places[15] != 16)){//16
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[15] = 16
+            addpositions(15)
+            verificado = true 
+        }else if ((py > 208 && py < 220) && (px > 560 && px < 578) && (places[16] != 17)){//17
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[16] = 17
+            addpositions(16) 
+            verificado = true
+        }else if ((py > 205 && py < 217) && (px > 660 && px < 678) && (places[17] != 18)){//18
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[17] = 18
+            addpositions(17)
+            verificado = true
+        }else if ((py > 205 && py < 217) && (px > 760 && px < 778) && (places[18]!= 19)){//19
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[18] = 19
+            addpositions(18)
+            verificado = true
+        }else if ((py > 305 && py < 317) && (px > 760 && px < 778) && (places[19] != 20)){//20
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[19] = 20
+            addpositions(19)
+            verificado = true
+        }else if ((py > 405 && py < 417) && (px > 760 && px < 778) && (places[20] != 21)){//21
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[20] = 21
+            addpositions(20)
+            verificado = true
+        }else if ((py > 405 && py < 417) && (px > 660 && px < 678) && (places[21] != 22)){//22
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[21] = 22 
+            addpositions(21)
+            verificado = true
+        }else if ((py > 405 && py < 417) && (px > 560 && px < 578) && (places[22] != 23)){//23
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[22] = 23
+            addpositions(22)
+            verificado = true
+        }else if ((py > 305 && py < 320) && (px > 556 && px < 580) && (places[23] != 24)){//24
+            clearInterval(inter)
+            tes.removeEventListener("dblclick", dbclick)
+            places[23] = 24
+            addpositions(23)
+            verificado = true
+        }
+
+    }
+
+    function addpositions(n){//usada para saber a posição dos vermelhos e azuis, e tambem saber quais div estão no tabuleiro
+        if (redplayed){
+            red[n] = (places[n])
+            posicaoredjogada[n] = contadora // informa o nº da div
+        }else if (blueplayed){
+            blue[n] = (places[n])
+            posicaobluejogada[n] = contadorablue
+        }
+    }
+</script>
+</html>
