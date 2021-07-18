@@ -13,4 +13,4 @@ De dois cliques na peça que voçê quer jogar e depois clique na posição que 
 
 Quando fizer um ponto de um clique na peça que voçê quer *matar*.
 
-Após posicionar todas as peças, para movimentá-las basta clicar na peça que deseja mover e então definir a direção apertando as setas direcinais do teclado.
+Após posicionar todas as peças, para movimentá-las basta clicar na peça que deseja mover e então definir a direção apertando as setas direcionais do teclado.
